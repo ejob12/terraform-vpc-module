@@ -52,9 +52,11 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 # Create NAT Gateway (Optional)
-#resource "aws_eip" "nat_eip" {
- # count = var.enable_nat_gateway ? 1 : 0
- # tags  = merge(var.tags, { Name = "${var.vpc_name}-nat-eip" })
+# Uncomment the following block if you want to enable NAT Gateway
+/*
+resource "aws_eip" "nat_eip" {
+  count = var.enable_nat_gateway ? 1 : 0
+  tags  = merge(var.tags, { Name = "${var.vpc_name}-nat-eip" })
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
@@ -63,6 +65,7 @@ resource "aws_nat_gateway" "nat_gateway" {
   subnet_id     = aws_subnet.public_subnets[0].id
   tags          = merge(var.tags, { Name = "${var.vpc_name}-nat-gw" })
 }
+*/
 
 # Create Private Route Table
 resource "aws_route_table" "private_route_table" {
@@ -78,9 +81,12 @@ resource "aws_route_table_association" "private_subnet_associations" {
 }
 
 # Add Default Route to NAT Gateway (Optional)
-#resource "aws_route" "private_nat_gateway" {
- # count                  = var.enable_nat_gateway ? 1 : 0
- # route_table_id         = aws_route_table.private_route_table.id
- # destination_cidr_block = "0.0.0.0/0"
- # nat_gateway_id         = aws_nat_gateway.nat_gateway[count.index].id
+# Uncomment the following block if you want to enable NAT Gateway
+/*
+resource "aws_route" "private_nat_gateway" {
+  count                  = var.enable_nat_gateway ? 1 : 0
+  route_table_id         = aws_route_table.private_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat_gateway[count.index].id
 }
+*/
